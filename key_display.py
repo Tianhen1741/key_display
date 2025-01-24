@@ -132,13 +132,17 @@ class KeyDisplayApp:
             return None
     
     def on_press(self, key):
+        # 获取按键名称
         key_name = self.get_key_name(key)
+        # 如果按键名称有效
         if key_name:  # 只处理有效的按键名称
             # 更新当前按键集合
             self.current_keys.add(key_name)
             # 复制当前按键集合到显示集合
             self.displayed_keys = self.current_keys.copy()
+            # 更新最后按键时间
             self.last_key_time = time.time()
+            # 更新显示
             self.update_display()
     
     def on_release(self, key):
@@ -147,6 +151,7 @@ class KeyDisplayApp:
             # 从当前按键集合中移除
             self.current_keys.discard(key_name)
     
+
     def check_key_timeout(self):
         while True:
             if self.displayed_keys and time.time() - self.last_key_time > self.display_duration:
@@ -197,6 +202,9 @@ class KeyDisplayApp:
                 self.update_history(display_text)
         else:
             display_text = "等待按键..."
+            # 清空按键历史集合
+            self.current_keys.clear()
+            self.displayed_keys.clear()
             
         # 在主线程中更新标签文本
         self.root.after(0, lambda: self.label.config(text=display_text))
